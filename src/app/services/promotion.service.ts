@@ -3,6 +3,7 @@ import { Promotion } from '../shared/promotion';
 import { PROMOTIONS } from '../shared/promotions';
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/Observable/of';
 
 import 'rxjs/add/operator/delay';
 
