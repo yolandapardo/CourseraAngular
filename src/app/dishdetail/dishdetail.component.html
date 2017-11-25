@@ -7,24 +7,24 @@
                     <h3>{{dish.name | uppercase}}</h3>
                 </md-card-title>
             </md-card-header>
-            <img md-card-image src={{dish.image}} alt={{dish.name}}>
+            <img md-card-image src="{{BaseURL + dish.image}}" alt={{dish.name}}>
             <md-card-content>
                 <p>{{dish.description}}
                 </p>
             </md-card-content>
             <md-card-actions>
-        <button md-button [routerLink]="['/dishdetail', prev]"><span class="fa fa-chevron-left fa-lg"></span></button>
-        <button md-button (click)="goBack()">BACK</button>
-        <button md-button>LIKE</button>
-        <button md-button>SHARE</button>
-        <span class="flex-spacer"></span>
-        <button md-button [routerLink]="['/dishdetail', next]"><span class="fa fa-chevron-right fa-lg"></span></button>
-      </md-card-actions>
-    </md-card>
-  </div>
+                <button md-button [routerLink]="['/dishdetail', prev]"><span class="fa fa-chevron-left fa-lg"></span></button>
+                <button md-button (click)="goBack()">BACK</button>
+                <button md-button>LIKE</button>
+                <button md-button>SHARE</button>
+                <span class="flex-spacer"></span>
+                <button md-button [routerLink]="['/dishdetail', next]"><span class="fa fa-chevron-right fa-lg"></span></button>
+            </md-card-actions>
+        </md-card>
+    </div>
 
     <div fxFlex="40" *ngIf="dish">
-    <md-list>
+        <md-list>
             <md-list-item *ngFor="let comm of dish.comments">
 
                 <p md-line>{{comm.rating}} Stars</p>
@@ -32,9 +32,42 @@
                 <p md-line>{{comm.author}}, {{comm.date | date:'MMM. d, y'}}</p>
 
             </md-list-item>
+            <md-list-item *ngIf="commentForm.valid">
+                <p md-line>{{commentForm.value.rating | json}} Stars</p>
+                <p md-line>{{commentForm.value.comment | json}}</p>
+                <p md-line>{{commentForm.value.author | json}}</p>
+            </md-list-item>
         </md-list>
+        <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+            <p>
+                <md-input-container class="half-width" dividerColor="{{(formErrors.author) ? 'warn' : 'primary'}}">
+                    <input mdInput formControlName="author" placeholder="Author" type="text" required>
+                    <md-hint>
+                        <span [hidden]="!(formErrors.author)">
+                  {{formErrors.author}}</span>
+                    </md-hint>
+                </md-input-container>
+            </p>
+
+            <md-slider min="1" max="5" step="1" value="5" thumbLabel tickInterval="1" formControlName="rating"></md-slider>
+
+            <p>
+                <md-input-container class="half-width" dividerColor="{{(formErrors.comment) ? 'warn' : 'primary'}}">
+                    <textarea mdInput formControlName="comment" placeholder="Comment" type="text" required></textarea>
+                    <md-hint>
+                        <span [hidden]="!(formErrors.comment)">
+                  {{formErrors.comment}}</span>
+                    </md-hint>
+                </md-input-container>
+            </p>
+
+            <button type="submit" md-button class="background-primary text-floral-white" [disabled]="commentForm.invalid">Submit</button>
+        </form>
     </div>
-  <div [hidden]="dish">
-    <md-spinner></md-spinner><h4>Loading . . . Please Wait</h4>
-  </div>
+
+    <div [hidden]="dish">
+        <md-spinner></md-spinner>
+        <h4>Loading . . . Please Wait</h4>
+    </div>
+
 </div>
